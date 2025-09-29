@@ -303,10 +303,10 @@ int main()
         cout << "1. Load Image\n";
         cout << "2. Apply Invert Image (Filter 3)\n";
         cout << "3. Apply Grayscale Image (Filter 1)\n";
-        cout << "4. Apply merge images (Filter 4)\n";
-        cout << "5. Apply Blur (Filter 12)\n";
-        cout << "6. Apply Black & White images (Filter 4)\n";
-        cout << "7. Apply awab (Filter 12)\n";
+        cout << "4. Apply merge Image (Filter 4)\n";
+        cout << "5. Apply Blur Image (Filter 12)\n";
+        cout << "6. Apply Black & White Image (Filter 2)\n";
+        cout << "7. Apply Flip Image (Filter 5)\n";
         cout << "8. Save Image\n";
         cout << "9. Exit\n";
         cout << "Enter your choice: ";
