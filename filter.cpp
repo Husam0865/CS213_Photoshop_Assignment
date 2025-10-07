@@ -98,7 +98,7 @@ void filterResizingImage(Image &image, Image &newImage)
     }
 }
 
-// Filter 5: Infrared
+// Filter 17 (Bonus)
 void infraredFilter(Image &image)
 {
     for (int i = 0; i < image.width; ++i)
