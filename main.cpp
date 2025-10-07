@@ -3,9 +3,9 @@
 using namespace std;
 
 // filter 3
+
 Image applyInvert(Image image) {
     Image newImage(image.width, image.height);
-
     for (int i = 0; i < image.width; i++) {
         for (int j = 0; j < image.height; j++) {
             newImage(i, j, 0) = 255 - image(i, j, 0);
@@ -13,21 +13,18 @@ Image applyInvert(Image image) {
             newImage(i, j, 2) = 255 - image(i, j, 2);
         }
     }
-
     return newImage;
 }
 
 // filter 12
+
 Image applyBlur(Image image) {
     int BLUR = 20;
     Image tempImage(image.width, image.height);
     Image newImage(image.width, image.height);
-
     for (int i = 0; i < image.width; i++) {
         for (int j = 0; j < image.height; j++) {
-            int sumR = 0, sumG = 0, sumB = 0;
-            int count = 0;
-
+            int sumR = 0, sumG = 0, sumB = 0, count = 0;
             for (int i2 = -BLUR; i2 <= BLUR; i2++) {
                 int x = i + i2;
                 if (x >= 0 && x < image.width) {
@@ -37,18 +34,14 @@ Image applyBlur(Image image) {
                     count++;
                 }
             }
-
             tempImage(i, j, 0) = sumR / count;
             tempImage(i, j, 1) = sumG / count;
             tempImage(i, j, 2) = sumB / count;
         }
     }
-
     for (int i = 0; i < image.width; i++) {
         for (int j = 0; j < image.height; j++) {
-            int sumR = 0, sumG = 0, sumB = 0;
-            int count = 0;
-
+            int sumR = 0, sumG = 0, sumB = 0, count = 0;
             for (int j2 = -BLUR; j2 <= BLUR; j2++) {
                 int y = j + j2;
                 if (y >= 0 && y < image.height) {
@@ -58,13 +51,160 @@ Image applyBlur(Image image) {
                     count++;
                 }
             }
-
             newImage(i, j, 0) = sumR / count;
-            newImage(i, j, 1) = sumG / count;
-            newImage(i, j, 2) = sumB / count;
+            newImage(i, j, 1) = sumB / count;
+            newImage(i, j, 2) = sumG / count;
+        }
+    }
+    return newImage;
+}
+
+// filter 6
+
+Image applyRotate(Image image) {
+    int choice;
+    cout << "Rotate image by:\n";
+    cout << "1) 90 degrees (Clockwise)\n";
+    cout << "2) 180 degrees\n";
+    cout << "3) 270 degrees (Clockwise)\n";
+    cout << "Enter your choice: ";
+    cin >> choice;
+
+    int w = image.width;
+    int h = image.height;
+
+    if (choice == 1) {
+        Image newImg(h, w);
+        for (int x = 0; x < w; x++) {
+            for (int y = 0; y < h; y++) {
+                for (int c = 0; c < 3; c++) {
+                    newImg(h - 1 - y, x, c) = image(x, y, c);
+                }
+            }
+        }
+        return newImg;
+    }
+    else if (choice == 2) {
+        Image newImg(w, h);
+        for (int x = 0; x < w; x++) {
+            for (int y = 0; y < h; y++) {
+                for (int c = 0; c < 3; c++) {
+                    newImg(w - 1 - x, h - 1 - y, c) = image(x, y, c);
+                }
+            }
+        }
+        return newImg;
+    }
+    else if (choice == 3) {
+        Image newImg(h, w);
+        for (int x = 0; x < w; x++) {
+            for (int y = 0; y < h; y++) {
+                for (int c = 0; c < 3; c++) {
+                    newImg(y, w - 1 - x, c) = image(x, y, c);
+                }
+            }
+        }
+        return newImg;
+    }
+    return image;
+}
+
+// filter 9
+
+Image applyFrame(Image image) {
+    int choice;
+    cout << "Choose frame type:\n1) Simple\n2) Fancy\n";
+    cin >> choice;
+
+    int th = 20;
+    int r = 0, g = 70, b = 200;
+    int newW = image.width + 2 * th;
+    int newH = image.height + 2 * th;
+
+    Image newImage(newW, newH);
+    for (int x = 0; x < newW; x++) {
+        for (int y = 0; y < newH; y++) {
+            newImage(x, y, 0) = r;
+            newImage(x, y, 1) = g;
+            newImage(x, y, 2) = b;
         }
     }
 
+    for (int x = 0; x < image.width; x++) {
+        for (int y = 0; y < image.height; y++) {
+            newImage(x + th, y + th, 0) = image(x, y, 0);
+            newImage(x + th, y + th, 1) = image(x, y, 1);
+            newImage(x + th, y + th, 2) = image(x, y, 2);
+        }
+    }
+
+    if (choice == 2) {
+        int borderThickness = 4;
+
+        for (int x = th / 2; x < newW - th / 2; x++) {
+            for (int t = 0; t < borderThickness; t++) {
+                newImage(x, th / 2 + t, 0) = 255;
+                newImage(x, th / 2 + t, 1) = 255;
+                newImage(x, th / 2 + t, 2) = 255;
+                newImage(x, newH - th / 2 - 1 - t, 0) = 255;
+                newImage(x, newH - th / 2 - 1 - t, 1) = 255;
+                newImage(x, newH - th / 2 - 1 - t, 2) = 255;
+            }
+        }
+
+        for (int y = th / 2; y < newH - th / 2; y++) {
+            for (int t = 0; t < borderThickness; t++) {
+                newImage(th / 2 + t, y, 0) = 255;
+                newImage(th / 2 + t, y, 1) = 255;
+                newImage(th / 2 + t, y, 2) = 255;
+                newImage(newW - th / 2 - 1 - t, y, 0) = 255;
+                newImage(newW - th / 2 - 1 - t, y, 1) = 255;
+                newImage(newW - th / 2 - 1 - t, y, 2) = 255;
+            }
+        }
+
+        int cornerSize = th / 2;
+        for (int i = 0; i < cornerSize; i++) {
+            for (int j = 0; j < cornerSize; j++) {
+                if (i + j < cornerSize / 2 || abs(i - j) < cornerSize / 2) {
+                    newImage(th / 2 + i, th / 2 + j, 0) = 255;
+                    newImage(th / 2 + i, th / 2 + j, 1) = 255;
+                    newImage(th / 2 + i, th / 2 + j, 2) = 255;
+
+                    newImage(newW - th / 2 - 1 - i, th / 2 + j, 0) = 255;
+                    newImage(newW - th / 2 - 1 - i, th / 2 + j, 1) = 255;
+                    newImage(newW - th / 2 - 1 - i, th / 2 + j, 2) = 255;
+
+                    newImage(th / 2 + i, newH - th / 2 - 1 - j, 0) = 255;
+                    newImage(th / 2 + i, newH - th / 2 - 1 - j, 1) = 255;
+                    newImage(th / 2 + i, newH - th / 2 - 1 - j, 2) = 255;
+
+                    newImage(newW - th / 2 - 1 - i, newH - th / 2 - 1 - j, 0) = 255;
+                    newImage(newW - th / 2 - 1 - i, newH - th / 2 - 1 - j, 1) = 255;
+                    newImage(newW - th / 2 - 1 - i, newH - th / 2 - 1 - j, 2) = 255;
+                }
+            }
+        }
+    }
+
+    return newImage;
+}
+
+
+// filter 15
+
+Image applyOldTV(Image image) {
+    Image newImage(image.width, image.height);
+    for (int y = 0; y < image.height; y++) {
+        for (int x = 0; x < image.width; x++) {
+            for (int c = 0; c < 3; c++) {
+                if (y % 2 == 0)
+                    newImage(x, y, c) = image(x, y, c);
+                else
+                    newImage(x, y, c) = image(x, y, c) * 0.5;
+            }
+        }
+    }
     return newImage;
 }
 
@@ -80,6 +220,9 @@ int main() {
         cout << "1. Load Image\n";
         cout << "2. Apply Invert Image (Filter 3)\n";
         cout << "3. Apply Blur (Filter 12)\n";
+        cout << "4. Apply Rotate (Filter 6)\n";
+        cout << "5. Apply Frame (Filter 9)\n";
+        cout << "6. Apply Old TV Effect (Filter 15)\n";
         cout << "8. Save Image\n";
         cout << "9. Exit\n";
         cout << "Enter your choice: ";
@@ -120,6 +263,39 @@ int main() {
                 cout << "Blur filter applied!\n";
                 break;
 
+            case 4:
+                if (!isLoaded) {
+                    cout << "Please load an image first (Option 1)!\n";
+                    break;
+                }
+                image = applyRotate(image);
+                isModified = true;
+                isSaved = false;
+                cout << "Rotate filter applied!\n";
+                break;
+
+            case 5:
+                if (!isLoaded) {
+                    cout << "Please load an image first (Option 1)!\n";
+                    break;
+                }
+                image = applyFrame(image);
+                isModified = true;
+                isSaved = false;
+                cout << "Frame filter applied!\n";
+                break;
+
+            case 6:
+                if (!isLoaded) {
+                    cout << "Please load an image first (Option 1)!\n";
+                    break;
+                }
+                image = applyOldTV(image);
+                isModified = true;
+                isSaved = false;
+                cout << "Old TV Effect applied!\n";
+                break;
+
             case 8:
                 if (!isLoaded) {
                     cout << "Please load an image first (Option 1)!\n";
@@ -141,7 +317,6 @@ int main() {
                     cout << "1. Save now\n2. Exit without saving\nAny other number: Cancel\n";
                     cout << "Enter your choice: ";
                     cin >> exit;
-
                     if (exit == 1) {
                         cout << "Pls enter image name to store new image\n";
                         cout << "and specify extension .jpg, .bmp, .png, .tga: ";
