@@ -202,8 +202,22 @@ Image applyCrop(Image image) {
 
 // filter 9
 Image applyFrame(Image image) {
+    int choice;
+    cout << "Choose frame type:\n";
+    cout << "1) Blue Frame\n";
+    cout << "2) Gold Frame\n";
+    cout << "3) Fancy Gold Frame with White Lines\n";
+    cin >> choice;
+
     int th = 20;
     int r = 0, g = 70, b = 200;
+
+    if (choice == 2) {
+        r = 212; g = 175; b = 55;
+    } else if (choice == 3) {
+        r = 212; g = 175; b = 55;
+    }
+
     int newW = image.width + 2 * th;
     int newH = image.height + 2 * th;
     Image newImage(newW, newH);
@@ -218,11 +232,26 @@ Image applyFrame(Image image) {
 
     for (int x = 0; x < image.width; x++) {
         for (int y = 0; y < image.height; y++) {
-            newImage(x + th, y + th, 0) = image(x, y, 0);
-            newImage(x + th, y + th, 1) = image(x, y, 1);
-            newImage(x + th, y + th, 2) = image(x, y, 2);
+            for (int c = 0; c < 3; c++) {
+                newImage(x + th, y + th, c) = image(x, y, c);
+            }
         }
     }
+
+    if (choice == 3) {
+        for (int x = 0; x < newW; x++) {
+            for (int y = 0; y < newH; y++) {
+                if ((y < th && y % 10 < 5) || (y > newH - th && y % 10 < 5) ||
+                    (x < th && x % 10 < 5) || (x > newW - th && x % 10 < 5)) {
+                    newImage(x, y, 0) = 255;
+                    newImage(x, y, 1) = 255;
+                    newImage(x, y, 2) = 255;
+                }
+            }
+        }
+    }
+
+    cout << "Frame applied successfully!\n";
     return newImage;
 }
 
