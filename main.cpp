@@ -113,15 +113,25 @@ Image applyRotate(Image image) {
 
 Image applyFrame(Image image) {
     int choice;
-    cout << "Choose frame type:\n1) Simple\n2) Fancy\n";
+    cout << "Choose frame type:\n";
+    cout << "1) Blue Frame\n";
+    cout << "2) Gold Frame\n";
+    cout << "3) Fancy Gold Frame with White Lines\n";
     cin >> choice;
 
     int th = 20;
     int r = 0, g = 70, b = 200;
+
+    if (choice == 2) {
+        r = 212; g = 175; b = 55;
+    } else if (choice == 3) {
+        r = 212; g = 175; b = 55;
+    }
+
     int newW = image.width + 2 * th;
     int newH = image.height + 2 * th;
-
     Image newImage(newW, newH);
+
     for (int x = 0; x < newW; x++) {
         for (int y = 0; y < newH; y++) {
             newImage(x, y, 0) = r;
@@ -132,61 +142,26 @@ Image applyFrame(Image image) {
 
     for (int x = 0; x < image.width; x++) {
         for (int y = 0; y < image.height; y++) {
-            newImage(x + th, y + th, 0) = image(x, y, 0);
-            newImage(x + th, y + th, 1) = image(x, y, 1);
-            newImage(x + th, y + th, 2) = image(x, y, 2);
+            for (int c = 0; c < 3; c++) {
+                newImage(x + th, y + th, c) = image(x, y, c);
+            }
         }
     }
 
-    if (choice == 2) {
-        int borderThickness = 4;
-
-        for (int x = th / 2; x < newW - th / 2; x++) {
-            for (int t = 0; t < borderThickness; t++) {
-                newImage(x, th / 2 + t, 0) = 255;
-                newImage(x, th / 2 + t, 1) = 255;
-                newImage(x, th / 2 + t, 2) = 255;
-                newImage(x, newH - th / 2 - 1 - t, 0) = 255;
-                newImage(x, newH - th / 2 - 1 - t, 1) = 255;
-                newImage(x, newH - th / 2 - 1 - t, 2) = 255;
-            }
-        }
-
-        for (int y = th / 2; y < newH - th / 2; y++) {
-            for (int t = 0; t < borderThickness; t++) {
-                newImage(th / 2 + t, y, 0) = 255;
-                newImage(th / 2 + t, y, 1) = 255;
-                newImage(th / 2 + t, y, 2) = 255;
-                newImage(newW - th / 2 - 1 - t, y, 0) = 255;
-                newImage(newW - th / 2 - 1 - t, y, 1) = 255;
-                newImage(newW - th / 2 - 1 - t, y, 2) = 255;
-            }
-        }
-
-        int cornerSize = th / 2;
-        for (int i = 0; i < cornerSize; i++) {
-            for (int j = 0; j < cornerSize; j++) {
-                if (i + j < cornerSize / 2 || abs(i - j) < cornerSize / 2) {
-                    newImage(th / 2 + i, th / 2 + j, 0) = 255;
-                    newImage(th / 2 + i, th / 2 + j, 1) = 255;
-                    newImage(th / 2 + i, th / 2 + j, 2) = 255;
-
-                    newImage(newW - th / 2 - 1 - i, th / 2 + j, 0) = 255;
-                    newImage(newW - th / 2 - 1 - i, th / 2 + j, 1) = 255;
-                    newImage(newW - th / 2 - 1 - i, th / 2 + j, 2) = 255;
-
-                    newImage(th / 2 + i, newH - th / 2 - 1 - j, 0) = 255;
-                    newImage(th / 2 + i, newH - th / 2 - 1 - j, 1) = 255;
-                    newImage(th / 2 + i, newH - th / 2 - 1 - j, 2) = 255;
-
-                    newImage(newW - th / 2 - 1 - i, newH - th / 2 - 1 - j, 0) = 255;
-                    newImage(newW - th / 2 - 1 - i, newH - th / 2 - 1 - j, 1) = 255;
-                    newImage(newW - th / 2 - 1 - i, newH - th / 2 - 1 - j, 2) = 255;
+    if (choice == 3) {
+        for (int x = 0; x < newW; x++) {
+            for (int y = 0; y < newH; y++) {
+                if ((y < th && y % 10 < 5) || (y > newH - th && y % 10 < 5) ||
+                    (x < th && x % 10 < 5) || (x > newW - th && x % 10 < 5)) {
+                    newImage(x, y, 0) = 255;
+                    newImage(x, y, 1) = 255;
+                    newImage(x, y, 2) = 255;
                 }
             }
         }
     }
 
+    cout << "Frame applied successfully!\n";
     return newImage;
 }
 
