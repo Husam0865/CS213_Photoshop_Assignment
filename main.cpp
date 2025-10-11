@@ -121,7 +121,9 @@ Image applyFrame(Image image) {
 
     int th = 20;
     int r = 0, g = 70, b = 200;
-
+ if (choice == 1) {
+        r = 0; g = 70; b = 200;
+    }
     if (choice == 2) {
         r = 212; g = 175; b = 55;
     } else if (choice == 3) {
